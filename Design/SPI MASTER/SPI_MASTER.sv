@@ -14,6 +14,7 @@ module SPI_MASTER(clock,reset,new_data,din,sync_clock,CS,MOSI);
   
   reg [11:0] temp;
   
+  
   always@(posedge clock)
     begin
       if(reset == 1'b1)
@@ -23,11 +24,12 @@ module SPI_MASTER(clock,reset,new_data,din,sync_clock,CS,MOSI);
         end
       else begin
         if(countclk < 10)
-          countclk <= countclk +1;
+          countclk <= countclk +1;              ////--[CLOCK DIVIDER] WAIT TILL THE COUNT CLOCK REACHES
+                                                //// 10 SO SYNC_CLK CAN BECOME INVERTED--////
         else 
           begin 
-            countclk <= 32'd0;
-            sync_clock <= ~sync_clock;
+            countclk <= 0;
+            sync_clock <= ~sync_clock;          /////ONE CLOCK OF SYNC_CLOCK IS EQUAL TO 10 CLOCK OF MAIN CLOCK--////
           end
       end
     end
@@ -39,7 +41,6 @@ module SPI_MASTER(clock,reset,new_data,din,sync_clock,CS,MOSI);
         begin
           CS <= 1'b1;
           MOSI <= 1'b0;
-          count <= 0;
         end
       
       else 
@@ -48,37 +49,38 @@ module SPI_MASTER(clock,reset,new_data,din,sync_clock,CS,MOSI);
         case (state)
           idel : 
             begin 
-            if(new_data == 1'b1)
+            if(new_data == 1'b1)              ////--WAIT FOR NEW DATA TO ARRIVE--////
               begin
-                state <= send;
-                temp <= din;
-                CS <= 1'b0;
+                temp <= din;                  ////--STORE THE DATA IN TEMP--////
+                state = send;                 ////--CHANGE THE STATE TO SEND--////
+                CS = 1'b0;                    ////--CS GOES LOW--////
+                count = 0;
               end
             else 
               begin
-                state <= idel;
-               temp <= 11'd0;
-                CS <= 1'b1;
+                state = idel;                 ////--IF NO NEW DATA THEN IDLE--////
+               temp = 11'd0;                  ////--RESET THE TEMP--////  
                end
             end
           
           
           send : 
             begin
-              if(count < 11) 
+              if(count < 11)                   ////--SEND THE DATA TO MOSI--////
               begin
-               MOSI <= temp[count];
-               count <= count + 1;
+               MOSI <= temp[count];            ////--SEND THE DATA TO MOSI BY LSB OF TEMP 1,2,4,...--////
+               count = count + 1;
               end
             else 
               begin
-                count <= 32'd0;
-                state <= idel;
-                CS <= 1'b1;
+                count = 32'd0;                 ////--RESET THE COUNT--////
+                state = idel;                  ////--CHANGE THE STATE TO IDLE--////
+                CS = 1'b1; 
+                MOSI = 1'b0; 
               end
             end
           
-        default : state <= idel;  
+        default : state = idel;  
         endcase
        end
     end 
