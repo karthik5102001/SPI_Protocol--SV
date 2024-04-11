@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
- 
-module tb(  );
+
+module tb();
  
 reg clk = 0, rst = 0, newd = 0;
 reg [11:0] din = 0;
@@ -10,24 +9,48 @@ wire done;
  
 always #10 clk = ~clk;
  
-top dut (clk, rst, newd, din, dout, done);
- 
-initial begin
+top dut (clk, newd, rst, din, dout, done);         ////INSTANTIATING THE DUT
+  
+ task reset;
 rst = 1;
-repeat(5) @(posedge clk);
+repeat(5) @(posedge clk);                         ////WAIT FOR 5 CLOCK CYCLES
 rst = 0;
- 
-for(int i = 0; i < 10; i++) 
-begin
+  endtask
+  
+  
+  task run;
 newd = 1;
-din = $urandom;
-@(posedge dut.S1.sync_clock);
-newd = 0;
-@(posedge done);
+    din = $urandom_range(1,1000);              ////RANDOM DATA
+@(posedge dut.S1.sync_clock);                  ////WAIT FOR SYNC CLOCK
+newd = 0;  
+@(posedge done);  
+  endtask
+  
+  
+initial begin
+  reset;                                        ////RESET
+  run;                                          ////RUN
+  @(posedge dut.S1.sync_clock); 
+  run;
+  @(posedge dut.S1.sync_clock);
+  run;
+  @(posedge dut.S1.sync_clock);
+  run;
+  @(posedge dut.S1.sync_clock);
+  run;
+   @(posedge dut.S1.sync_clock);
+  run;
+  @(posedge dut.S1.sync_clock);
+  run;
+  
+$finish;
 end
- 
- 
-end
+  
+  initial 
+       begin
+         $dumpfile("dut.vcd");
+        $dumpvars();     
+        end
  
  
 endmodule
