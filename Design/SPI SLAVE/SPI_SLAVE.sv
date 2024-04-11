@@ -44,6 +44,8 @@ always @(posedge sync_clock)
      end
 
 assign dout = temp;                                        ////OUTPUT DATA
+
+   
   ////////////////////////////////////////--ASSERTIONS--//////////////////////////////////////////////
   
   property start_on_check;
@@ -65,5 +67,7 @@ assign dout = temp;                                        ////OUTPUT DATA
     STATE_READ : assert property (read_on_check);
     
     ////////////////////////////////////////--END--ASSERTIONS--//////////////////////////////////////////////
+
+       
 endmodule
 
