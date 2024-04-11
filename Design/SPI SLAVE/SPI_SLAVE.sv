@@ -44,6 +44,26 @@ always @(posedge sync_clock)
      end
 
 assign dout = temp;                                        ////OUTPUT DATA
-
+  ////////////////////////////////////////--ASSERTIONS--//////////////////////////////////////////////
+  
+  property start_on_check;
+    @(posedge sync_clock) (state == start_on) |=> if (CS == 0)
+                                                       (count == 0) && (state == read_on) && (temp == 0)
+                                                   else 
+                                                        state == start_on;
+  endproperty
+  
+  STATE_START : assert property (start_on_check);
+    
+   property read_on_check;
+     @(posedge sync_clock) (state == read_on) |=> if ($past(count) <= 11)
+                                                          count == $past(count) + 1 
+                                                   else 
+                                                     (count == 0) && (done == 1) && (state == start_on);
+  endproperty
+  
+    STATE_READ : assert property (read_on_check);
+    
+    ////////////////////////////////////////--END--ASSERTIONS--//////////////////////////////////////////////
 endmodule
 
