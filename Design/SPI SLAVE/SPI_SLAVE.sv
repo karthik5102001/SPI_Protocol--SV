@@ -30,7 +30,7 @@ always @(posedge sync_clock)
          read_on : begin
                    if(count <= 11)
                        begin
-                          $display("Count = %0d",count);
+                         // $display("Count = %0d",count);
                           temp <= {MOSI, temp[11:1]};       ////RIGHT SHIFT OPERATION  
                            count <= count + 1;              ////INCREMENTING COUNT      
                         end
