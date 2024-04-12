@@ -111,7 +111,10 @@ class driver;
         driv_scrb.put(tr_1.din);
         
         @(posedge spi_drive.sync_clock);
-        spi_drive.new_data <= 0;                  ////Many asserssion will fail if we explictly make new_data low
+        spi_drive.new_data <= 0;                  ////Many assertion will fail here if we explictly make new_data low 
+                                                  ////because it will not be able to match the assertion condition
+                                                  ////we have to make it low after sync_clock or else the data in will
+                                                  ////not be able to match the data out as new_data will be high all the time.
         @(posedge spi_drive.done);
         
         
