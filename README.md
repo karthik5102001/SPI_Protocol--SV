@@ -4,7 +4,7 @@ Serial peripheral interface (SPI) is one of the most widely used interfaces betw
 
 
 ## Abstract
-This repository has managed by writing System Verilog based testbench architecture for SPI Protocol, for further exploring on verification concept's let's build another verification environment buy another framework like UVM, cocotb, e(Specman Elite) etc...
+This repository has managed by writing System Verilog based testbench architecture for SPI Protocol, for further exploring on verification concept's, let's build another verification environment buy another framework like UVM, cocotb, e(Specman Elite) etc...
 
 ##  Open Source Software's
  **EDA Playground**:
