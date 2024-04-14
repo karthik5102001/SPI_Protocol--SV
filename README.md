@@ -21,7 +21,7 @@ In the Design we have more focused on MOSI way of communication for single Slave
 
 ## Documentation
 
-- [Introduction to SPI Interface](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.analog.com/media/en/analog-dialogue/volume-52/number-3/introduction-to-spi-interface.pdf)
+- [Introduction to SPI Interface](http://www.analog.com/media/en/analog-dialogue/volume-52/number-3/introduction-to-spi-interface.pdf)
 
 - [Supporting Links - 1](https://www.circuitbasics.com/basics-of-the-spi-communication-protocol/#google_vignette)
 
